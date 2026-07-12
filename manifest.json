@@ -1,6 +1,6 @@
 {
-  "name": "Speech Timer ♥️ — Westlake Toastmasters",
-  "short_name": "Speech Timer ♥️",
+  "name": "Speech Timer",
+  "short_name": "Speech Timer",
   "description": "Powered by The Club with Heart — Toastmasters speech timing tool by Westlake Toastmasters",
   "start_url": "./index.html",
   "display": "standalone",

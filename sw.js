@@ -1,16 +1,25 @@
-const CACHE_NAME = 'speech-timer-v1.3.2f';
-const ASSETS = [
+const CACHE_NAME = 'speech-timer-v1.4.0';
+const CORE_ASSETS = [
   './',
   './index.html',
   './manifest.json',
   './icons/icon-192.png',
-  './icons/icon-512.png',
+  './icons/icon-512.png'
+];
+const OPTIONAL_ASSETS = [
   'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;500;700;900&display=swap'
 ];
 
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
+    caches.open(CACHE_NAME).then(cache => {
+      // Core files must all cache successfully so the app works fully offline.
+      // Optional (cross-origin) assets are best-effort — a flaky font fetch
+      // must never block the core app from being cached.
+      return cache.addAll(CORE_ASSETS).then(() =>
+        Promise.allSettled(OPTIONAL_ASSETS.map(url => cache.add(url)))
+      );
+    })
   );
   self.skipWaiting();
 });

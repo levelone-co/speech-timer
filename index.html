@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Speech Timer ♥️</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🫶</text></svg>">
+<title>Speech Timer</title>
+<link rel="icon" href="./icons/icon-192.png">
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#2d3436">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Speech Timer ♥️">
+<meta name="apple-mobile-web-app-title" content="Speech Timer">
 <link rel="apple-touch-icon" href="./icons/icon-180.png">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
 <style>
@@ -46,11 +46,20 @@
   body.phase-flash-white { background-color: #FAFAFA; color: #1a1a2e; }
 
   /* Header */
-  .header { padding: 18px 0 4px; text-align: center; }
-  .header .club-name { font-weight: 700; font-size: 1.35rem; letter-spacing: -0.3px; }
-  .header .club-heart { font-size: 1.6rem; line-height: 1.2; margin: 2px 0; }
-  .header .club-title { font-weight: 300; font-size: 1.05rem; letter-spacing: 0.3px; margin-bottom: 8px; }
+  .header {
+    position: sticky; top: 0; z-index: 500; width: 100%; align-self: stretch;
+    padding: 14px 0 10px; text-align: center;
+    background: var(--bg); transition: background-color 0.5s ease;
+  }
+  body.phase-green .header { background: var(--green-bg); }
+  body.phase-yellow .header { background: var(--yellow-bg); }
+  body.phase-red .header { background: var(--red-bg); }
+  body.phase-flash-white .header { background: #FAFAFA; }
   .header h1 { font-weight: 900; font-size: 1.35rem; letter-spacing: -0.3px; text-transform: uppercase; }
+
+  .sub-header { text-align: center; padding: 6px 0 2px; opacity: 0.5; }
+  .sub-header .club-name { font-weight: 600; font-size: 0.76rem; letter-spacing: 0.2px; }
+  .sub-header .club-title { font-weight: 400; font-size: 0.7rem; letter-spacing: 0.2px; margin-top: 1px; }
 
   .timer-display {
     font-family: 'JetBrains Mono', monospace; font-size: clamp(5rem, 18vw, 11rem);
@@ -110,7 +119,7 @@
   .checkbox-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .checkbox-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
   .checkbox-row label { font-size: 0.85rem; cursor: pointer; min-width: unset; }
-  .epilepsy-note { font-size: 0.66rem; opacity: 0.45; font-style: italic; margin-left: -8px; }
+  .epilepsy-note { display: block; width: 100%; font-size: 0.66rem; opacity: 0.45; font-style: italic; margin-left: 28px; margin-top: 2px; }
 
   .flash-row label.disabled-label { opacity: 0.35; cursor: not-allowed; }
   .flash-row input:disabled { cursor: not-allowed; opacity: 0.35; }
@@ -204,10 +213,13 @@
 
   .log-entry input[type="text"], .log-entry select {
     font-family: 'Outfit', sans-serif; font-size: 0.78rem; padding: 3px 5px;
-    border: 1px solid transparent; border-radius: 5px; background: transparent;
+    border: 1px solid transparent; border-radius: 5px; background: rgba(0,0,0,0.045);
     color: inherit; outline: none; width: 100%; transition: border-color 0.2s, background 0.2s;
   }
-  .log-entry input[type="text"]:hover, .log-entry select:hover { border-color: var(--border); background: rgba(0,0,0,0.04); }
+  body.dark-mode .log-entry input[type="text"], body.dark-mode .log-entry select { background: rgba(255,255,255,0.07); }
+  .log-entry input[type="text"]:disabled, .log-entry select:disabled { background: transparent !important; }
+  .log-entry input[type="text"]:hover, .log-entry select:hover { border-color: var(--border); background: rgba(0,0,0,0.07); }
+  body.dark-mode .log-entry input[type="text"]:hover, body.dark-mode .log-entry select:hover { background: rgba(255,255,255,0.11); }
   .log-entry input[type="text"]:focus, .log-entry select:focus { border-color: var(--accent); background: #fff; color: var(--text); }
   .log-entry .le-red input, .log-entry .le-time input { font-family: 'JetBrains Mono', monospace; font-size: 0.76rem; text-align: center; }
   .log-entry .le-red input:disabled { opacity: 0.4; cursor: not-allowed; }
@@ -245,9 +257,7 @@
     gap: 4px; min-width: 96px; box-sizing: border-box;
   }
   .top-btn.icon-only { min-width: 38px; padding: 6px 10px; }
-  .top-right { position: absolute; top: 14px; right: 14px; display: flex; gap: 6px; align-items: center; }
-  .top-right .top-btn { min-width: 36px; padding: 5px 9px; font-size: 0.72rem; }
-  .top-right .top-btn.icon-only { font-size: 0.85rem; }
+  .top-btn.round { border-radius: 50%; width: 34px; height: 34px; min-width: unset; padding: 0; font-size: 0.9rem; flex-shrink: 0; }
   .top-btn:hover { background: rgba(0,0,0,0.05); border-color: var(--accent); }
   body.phase-green .top-btn, body.phase-yellow .top-btn, body.phase-red .top-btn { border-color: rgba(255,255,255,0.3); color: #fff; }
   body.phase-green .top-btn:hover, body.phase-yellow .top-btn:hover, body.phase-red .top-btn:hover { background: rgba(255,255,255,0.15); }
@@ -367,19 +377,27 @@
   }
 
   /* Print styles */
+  .print-header { display: none; }
   @media print {
-    body { background: #fff !important; color: #000 !important; }
-    .header, .top-bar, .timer-display, .phase-label, .progress-bar-container,
+    html, body { background: #fff !important; color: #000 !important; min-height: 0 !important; height: auto !important; }
+    .header, .sub-header, .top-bar, .timer-display, .phase-label, .progress-bar-container,
     .controls-panel, .color-indicators, .script-panel, .dialog-overlay,
     .settings-overlay, .install-overlay, .update-banner, .footer, .log-toolbar,
     .log-toggle-bar, .le-del, .le-del-btn, .log-date-del { display: none !important; }
+    .print-header {
+      display: block !important; text-align: center; font-weight: 900; font-size: 1.3rem;
+      letter-spacing: -0.3px; text-transform: uppercase; margin-bottom: 14px; color: #000;
+    }
     .log-wrapper { width: 100% !important; margin: 0 !important; }
     .log-panel { display: block !important; border: none !important; height: auto !important;
       max-height: none !important; overflow: visible !important; background: #fff !important;
       color: #000 !important; }
     .log-panel.hidden { display: block !important; }
     .log-entry { background: #fff !important; color: #000 !important; border-bottom: 1px solid #ccc; border-radius: 0; }
-    .log-entry input, .log-entry select { background: transparent !important; color: #000 !important; border: none !important; }
+    .log-entry input, .log-entry select {
+      background: transparent !important; color: #000 !important; border: none !important;
+      appearance: none !important; -webkit-appearance: none !important; -moz-appearance: none !important;
+    }
     .log-date-bar { color: #000 !important; border-bottom: 2px solid #000; }
     .log-status.overtime { background: #fff !important; color: #c00 !important; border: 1px solid #c00; }
     .log-status.within { background: #fff !important; color: #060 !important; border: 1px solid #060; }
@@ -391,6 +409,7 @@
     .controls-panel { padding: 16px 14px; }
     .control-row { flex-wrap: wrap; }
     .control-row label { min-width: unset; width: 100%; }
+    .control-row.checkbox-row label { width: auto; flex: 1; }
     .btn { font-size: 0.85rem; padding: 12px 0; }
     .log-wrapper { width: calc(100% - 16px); }
     .log-panel { height: 300px; max-height: 60vh; }
@@ -416,21 +435,19 @@
 <body>
 
 <div class="header">
-  <div class="club-name">Powered by The Club with Heart</div>
-  <div class="club-heart">♥️</div>
-  <div class="club-title">Westlake Toastmasters, Cape Town, South Africa</div>
   <h1>Speech Timing Tool</h1>
 </div>
-
-<div class="top-right">
-  <button class="top-btn" id="installBtn" style="display:none;">Install App</button>
-  <button class="top-btn icon-only" id="darkModeBtn" title="Toggle dark mode">🌙</button>
+<div class="sub-header">
+  <div class="club-name">Powered by The Club with Heart ♥️</div>
+  <div class="club-title">Westlake Toastmasters, Cape Town, South Africa</div>
 </div>
 
 <div class="top-bar">
+  <button class="top-btn" id="installBtn" style="display:none;">Install App</button>
   <button class="top-btn" id="timerScriptBtn">Timer Script</button>
   <button class="top-btn" id="settingsBtn">Settings</button>
   <a class="top-btn" href="https://github.com/levelone-co/speech-timer/blob/main/HELP.md" target="_blank" rel="noopener">Help</a>
+  <button class="top-btn round" id="darkModeBtn" title="Toggle dark mode">🌙</button>
 </div>
 
 <div class="timer-display" id="timerDisplay">0:00</div>
@@ -502,6 +519,7 @@
   <video id="indVideo" playsinline webkit-playsinline muted loop></video>
 </div>
 
+<div class="print-header">Speech Timer — Speech Log</div>
 <div class="log-wrapper">
   <div class="log-toggle-bar" id="logToggle">
     <span>Speech Log</span>
@@ -529,7 +547,7 @@
 <div class="footer">
   <a href="https://www.westlaketoastmasters.co.za" target="_blank" rel="noopener">www.westlaketoastmasters.co.za</a>
   <span style="opacity:0.3; margin:0 6px;">|</span>
-  <a href="https://github.com/levelone-co/speech-timer/" target="_blank" rel="noopener">v1.3.2f</a><br>
+  <a href="https://github.com/levelone-co/speech-timer/" target="_blank" rel="noopener">v1.4.0</a><br>
   <script src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
   <script>kofiwidget2.init('Click here to buy me a coffee', '#2d3436', 'H2H71XAPZJ');kofiwidget2.draw();</script>
 </div>
@@ -559,9 +577,9 @@
 <!-- Settings dialog -->
 <div class="settings-overlay" id="settingsOverlay">
   <div class="settings-box">
-    <h3>⚙️ Settings</h3>
+    <h3>Settings</h3>
     <div class="settings-row" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
-      <label for="settingsDarkMode" style="font-size:0.85rem; font-weight:500;">🌙 Dark mode</label>
+      <label for="settingsDarkMode" style="font-size:0.85rem; font-weight:500;">Dark mode</label>
       <input type="checkbox" id="settingsDarkMode" style="width:18px; height:18px; accent-color:var(--accent);">
     </div>
     <div class="settings-row" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
@@ -604,7 +622,7 @@
 <div class="update-banner" id="updateBanner">🔄 Update available — tap to refresh</div>
 
 <script>
-const APP_VERSION = '1.3.2';
+const APP_VERSION = '1.4.0';
 const presets = {
   standard:    { green: 300, yellow: 360, red: 420 },
   icebreaker:  { green: 240, yellow: 300, red: 360 },
@@ -1095,7 +1113,7 @@ $('installBtn').addEventListener('click', () => {
   } else if (/Android/.test(ua)) {
     html = '<p class="install-step">Android (Chrome):</p><p>1. Tap the <strong>three-dot menu</strong> (⋮) top right</p><p>2. Tap <strong>"Add to Home Screen"</strong> or <strong>"Install app"</strong></p><p>3. Tap <strong>"Install"</strong></p>';
   } else {
-    html = '<p class="install-step">Desktop (Chrome / Edge):</p><p>1. Click the <strong>install icon</strong> in the address bar</p><p>2. Or go to Menu → <strong>"Install Speech Timer ♥️"</strong></p><p>The app opens in its own window.</p>';
+    html = '<p class="install-step">Desktop (Chrome / Edge):</p><p>1. Click the <strong>install icon</strong> in the address bar</p><p>2. Or go to Menu → <strong>"Install Speech Timer"</strong></p><p>The app opens in its own window.</p>';
   }
   html += '<p style="margin-top:14px;font-size:0.8rem;opacity:0.6;">Once installed, the app works fully offline.</p>';
   $('installInstructions').innerHTML = html;
@@ -1105,18 +1123,29 @@ $('installClose').addEventListener('click', () => { $('installOverlay').classLis
 
 // ── Check for Updates ──
 $('updateBtn').addEventListener('click', async () => {
-  if ('serviceWorker' in navigator) {
-    try {
-      const reg = await navigator.serviceWorker.getRegistration();
-      if (reg) {
-        await reg.update();
-        alert('Checked for updates. If a new version is available, it will load on next refresh.');
-      } else {
-        alert('Service worker not registered. Try refreshing the page.');
-      }
-    } catch(e) { alert('Could not check for updates. Please refresh the page.'); }
-  } else {
-    alert('Service workers not supported in this browser.');
+  if (!('serviceWorker' in navigator)) { alert('Service workers not supported in this browser.'); return; }
+  const btn = $('updateBtn');
+  const original = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Checking…';
+  try {
+    const reg = await navigator.serviceWorker.getRegistration();
+    if (!reg) { alert('Service worker not registered yet. Try refreshing the page.'); return; }
+    let foundUpdate = false;
+    const onUpdateFound = () => { foundUpdate = true; };
+    reg.addEventListener('updatefound', onUpdateFound);
+    await reg.update();
+    // Give the browser a moment to start installing any newly-fetched worker.
+    await new Promise(r => setTimeout(r, 800));
+    reg.removeEventListener('updatefound', onUpdateFound);
+    if (foundUpdate || reg.waiting || reg.installing) {
+      alert('A new version was found and is installing — it will apply automatically in a few seconds.');
+    } else {
+      alert(`You're up to date (v${APP_VERSION}).`);
+    }
+  } catch(e) {
+    alert('Could not check for updates. Please refresh the page.');
+  } finally {
+    btn.disabled = false; btn.textContent = original;
   }
 });
 

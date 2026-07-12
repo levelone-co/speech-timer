@@ -1,4 +1,4 @@
-# Speech Timer ♥️
+# Speech Timer
 
 **Toastmasters Speech Timing Tool — by Westlake Toastmasters**
 
@@ -10,7 +10,7 @@ A web-based speech timer for Toastmasters meetings. Works in any browser, instal
 
 ## Version
 
-**v1.3.2f** — Westlake Toastmasters
+**v1.4.0** — Westlake Toastmasters
 
 ---
 
@@ -47,7 +47,7 @@ A web-based speech timer for Toastmasters meetings. Works in any browser, instal
 ### Desktop (Chrome / Edge)
 
 1. Open the live link in Chrome or Edge
-2. Click the **install icon** in the address bar (or go to Menu → "Install Speech Timer ♥️")
+2. Click the **install icon** in the address bar (or go to Menu → "Install Speech Timer")
 3. The app opens in its own window and is available from your applications
 
 ### Note
