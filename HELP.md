@@ -1,6 +1,6 @@
 # Speech Timer — Help Guide
 
-**Westlake Toastmasters Speech Timing Tool — v1.4.0**
+**Westlake Toastmasters Speech Timing Tool — v1.5.0**
 
 ---
 
@@ -143,6 +143,7 @@ This timer can be installed as a standalone app on your phone or computer. See t
 | v1.3.1 | Dark mode, CSV export, print view, speaker name autocomplete, ko-fi link, simplified Settings |
 | v1.3.2f | Dark mode fix (persists through phases), settings redesign, overtime UX, wake lock, timer script updates, demo finish button |
 | v1.4.0 | Renamed to "Speech Timer", new app icon, sticky header, folded dark-mode button into top bar, print fixes (no blank page, header, no dropdown arrows), better speech log contrast, cleaner settings dialog, smarter update check |
+| v1.5.0 | Fixed ko-fi widget offline caching, added optional phase-change sound cues (off by default), undo for deleted log entries, bigger sticky title with a second sticky timer block underneath, unbolded sub-header lines |
 
 ---
 

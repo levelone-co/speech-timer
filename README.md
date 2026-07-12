@@ -10,7 +10,7 @@ A web-based speech timer for Toastmasters meetings. Works in any browser, instal
 
 ## Version
 
-**v1.4.0** — Westlake Toastmasters
+**v1.5.0** — Westlake Toastmasters
 
 ---
 

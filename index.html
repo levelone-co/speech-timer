@@ -48,18 +48,37 @@
   /* Header */
   .header {
     position: sticky; top: 0; z-index: 500; width: 100%; align-self: stretch;
-    padding: 14px 0 10px; text-align: center;
-    background: var(--bg); transition: background-color 0.5s ease;
+    padding: 16px 0 12px; text-align: center;
+    background: var(--bg); border-bottom: 1px solid var(--border);
+    transition: background-color 0.5s ease, border-color 0.5s ease;
   }
-  body.phase-green .header { background: var(--green-bg); }
-  body.phase-yellow .header { background: var(--yellow-bg); }
-  body.phase-red .header { background: var(--red-bg); }
-  body.phase-flash-white .header { background: #FAFAFA; }
-  .header h1 { font-weight: 900; font-size: 1.35rem; letter-spacing: -0.3px; text-transform: uppercase; }
+  body.phase-green .header { background: var(--green-bg); border-bottom-color: rgba(255,255,255,0.25); }
+  body.phase-yellow .header { background: var(--yellow-bg); border-bottom-color: rgba(255,255,255,0.25); }
+  body.phase-red .header { background: var(--red-bg); border-bottom-color: rgba(255,255,255,0.25); }
+  body.phase-flash-white .header { background: #FAFAFA; border-bottom-color: var(--border); }
+  .header h1 { font-weight: 900; font-size: clamp(1.6rem, 4.5vw, 2.1rem); letter-spacing: -0.3px; text-transform: uppercase; }
 
   .sub-header { text-align: center; padding: 6px 0 2px; opacity: 0.5; }
-  .sub-header .club-name { font-weight: 600; font-size: 0.76rem; letter-spacing: 0.2px; }
+  .sub-header .club-name { font-weight: 400; font-size: 0.76rem; letter-spacing: 0.2px; }
   .sub-header .club-title { font-weight: 400; font-size: 0.7rem; letter-spacing: 0.2px; margin-top: 1px; }
+
+  .timer-sticky {
+    position: sticky; top: var(--header-h, 56px); z-index: 400; width: 100%; align-self: stretch;
+    background: var(--bg); transition: background-color 0.5s ease;
+  }
+  body.phase-green .timer-sticky { background: var(--green-bg); }
+  body.phase-yellow .timer-sticky { background: var(--yellow-bg); }
+  body.phase-red .timer-sticky { background: var(--red-bg); }
+  body.phase-flash-white .timer-sticky { background: #FAFAFA; }
+  /* Soft graded edge so content fades under the sticky timer instead of a hard line. */
+  .timer-sticky::after {
+    content: ''; position: absolute; left: 0; right: 0; top: 100%; height: 14px;
+    background: linear-gradient(var(--bg), transparent); pointer-events: none;
+  }
+  body.phase-green .timer-sticky::after { background: linear-gradient(var(--green-bg), transparent); }
+  body.phase-yellow .timer-sticky::after { background: linear-gradient(var(--yellow-bg), transparent); }
+  body.phase-red .timer-sticky::after { background: linear-gradient(var(--red-bg), transparent); }
+  body.phase-flash-white .timer-sticky::after { background: linear-gradient(#FAFAFA, transparent); }
 
   .timer-display {
     font-family: 'JetBrains Mono', monospace; font-size: clamp(5rem, 18vw, 11rem);
@@ -327,6 +346,23 @@
   }
   .update-banner.visible { display: block; }
 
+  /* Undo toast */
+  .undo-toast {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--accent); color: #fff; padding: 10px 12px 10px 16px; border-radius: 10px;
+    display: flex; align-items: center; gap: 14px; font-size: 0.82rem; font-weight: 500;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25); z-index: 970; opacity: 0; pointer-events: none;
+    transition: opacity 0.25s, transform 0.25s; max-width: calc(100% - 32px);
+  }
+  .undo-toast.visible { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
+  body.dark-mode .undo-toast { background: #eaeaea; color: #1a1a2e; }
+  .undo-toast button {
+    background: none; border: 1px solid rgba(255,255,255,0.5); color: inherit; border-radius: 6px;
+    padding: 4px 10px; font-weight: 700; font-size: 0.72rem; text-transform: uppercase;
+    letter-spacing: 0.3px; cursor: pointer; flex-shrink: 0;
+  }
+  body.dark-mode .undo-toast button { border-color: rgba(0,0,0,0.3); }
+
   /* Dialog */
   .dialog-overlay {
     display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45);
@@ -380,9 +416,9 @@
   .print-header { display: none; }
   @media print {
     html, body { background: #fff !important; color: #000 !important; min-height: 0 !important; height: auto !important; }
-    .header, .sub-header, .top-bar, .timer-display, .phase-label, .progress-bar-container,
+    .header, .sub-header, .top-bar, .timer-sticky, .timer-display, .phase-label, .progress-bar-container,
     .controls-panel, .color-indicators, .script-panel, .dialog-overlay,
-    .settings-overlay, .install-overlay, .update-banner, .footer, .log-toolbar,
+    .settings-overlay, .install-overlay, .update-banner, .undo-toast, .footer, .log-toolbar,
     .log-toggle-bar, .le-del, .le-del-btn, .log-date-del { display: none !important; }
     .print-header {
       display: block !important; text-align: center; font-weight: 900; font-size: 1.3rem;
@@ -438,7 +474,7 @@
   <h1>Speech Timing Tool</h1>
 </div>
 <div class="sub-header">
-  <div class="club-name">Powered by The Club with Heart ♥️</div>
+  <div class="club-name">Powered by The Club with Heart</div>
   <div class="club-title">Westlake Toastmasters, Cape Town, South Africa</div>
 </div>
 
@@ -450,8 +486,10 @@
   <button class="top-btn round" id="darkModeBtn" title="Toggle dark mode">🌙</button>
 </div>
 
-<div class="timer-display" id="timerDisplay">0:00</div>
-<div class="phase-label" id="phaseLabel">&nbsp;</div>
+<div class="timer-sticky">
+  <div class="timer-display" id="timerDisplay">0:00</div>
+  <div class="phase-label" id="phaseLabel">&nbsp;</div>
+</div>
 
 <div class="progress-bar-container">
   <div class="progress-bar" id="progressBar"></div>
@@ -547,7 +585,7 @@
 <div class="footer">
   <a href="https://www.westlaketoastmasters.co.za" target="_blank" rel="noopener">www.westlaketoastmasters.co.za</a>
   <span style="opacity:0.3; margin:0 6px;">|</span>
-  <a href="https://github.com/levelone-co/speech-timer/" target="_blank" rel="noopener">v1.4.0</a><br>
+  <a href="https://github.com/levelone-co/speech-timer/" target="_blank" rel="noopener">v1.5.0</a><br>
   <script src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
   <script>kofiwidget2.init('Click here to buy me a coffee', '#2d3436', 'H2H71XAPZJ');kofiwidget2.draw();</script>
 </div>
@@ -581,6 +619,10 @@
     <div class="settings-row" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
       <label for="settingsDarkMode" style="font-size:0.85rem; font-weight:500;">Dark mode</label>
       <input type="checkbox" id="settingsDarkMode" style="width:18px; height:18px; accent-color:var(--accent);">
+    </div>
+    <div class="settings-row" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+      <label for="settingsPhaseSound" style="font-size:0.85rem; font-weight:500;">Phase sound cues</label>
+      <input type="checkbox" id="settingsPhaseSound" style="width:18px; height:18px; accent-color:var(--accent);">
     </div>
     <div class="settings-row" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
       <label style="font-size:0.85rem; font-weight:500;">Check for updates</label>
@@ -621,8 +663,14 @@
 <!-- Update banner -->
 <div class="update-banner" id="updateBanner">🔄 Update available — tap to refresh</div>
 
+<!-- Undo toast -->
+<div class="undo-toast" id="undoToast">
+  <span id="undoText"></span>
+  <button id="undoBtn">Undo</button>
+</div>
+
 <script>
-const APP_VERSION = '1.4.0';
+const APP_VERSION = '1.5.0';
 const presets = {
   standard:    { green: 300, yellow: 360, red: 420 },
   icebreaker:  { green: 240, yellow: 300, red: 360 },
@@ -640,6 +688,7 @@ let timerInterval = null, elapsedSeconds = 0, running = false, paused = false;
 let currentPhase = 'white', audioCtx = null, flashInterval = null, flashState = false;
 let alarmRepeatInterval = null, isDemo = false, demoTimeout = null, flashingActive = false;
 let vibrateEnabled = false;
+let phaseSoundEnabled = false;
 
 const $ = id => document.getElementById(id);
 const timerDisplay = $('timerDisplay'), phaseLabel = $('phaseLabel'), progressBar = $('progressBar');
@@ -678,6 +727,9 @@ function todayStr() {
 
 // ── Phase management ──
 function setPhase(phase) {
+  if (phaseSoundEnabled && running && phase !== currentPhase && (phase === 'green' || phase === 'yellow' || phase === 'red')) {
+    playPhaseTone(phase);
+  }
   currentPhase = phase;
   const isDark = document.body.classList.contains('dark-mode');
   document.body.className = phase === 'white' ? '' : 'phase-' + phase;
@@ -709,6 +761,19 @@ function playAlarmSound() {
     }
     // Vibrate on mobile if supported and enabled
     if (vibrateEnabled && navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 200]);
+  } catch(e) {}
+}
+function playPhaseTone(phase) {
+  try {
+    unlockAudio();
+    const freqs = { green: 660, yellow: 550, red: 440 };
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+    osc.type = 'sine'; osc.frequency.value = freqs[phase] || 500;
+    gain.gain.setValueAtTime(0.22, now);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(now); osc.stop(now + 0.36);
   } catch(e) {}
 }
 
@@ -788,7 +853,18 @@ function getOrCreateDateGroup(dateStr) {
   bar.innerHTML = '<span>' + dateStr + '</span>';
   const delBtn = document.createElement('button');
   delBtn.className = 'log-date-del'; delBtn.innerHTML = '✕'; delBtn.title = 'Delete all entries for this date';
-  delBtn.addEventListener('click', () => { group.remove(); checkEmpty(); saveLog(); });
+  delBtn.addEventListener('click', () => {
+    const entries = Array.from(group.querySelectorAll('.log-entry')).map(e => ({
+      name: e.querySelector('.le-name input').value,
+      typeVal: e.querySelector('.le-type select').value,
+      timeSec: parseMSS(e.querySelector('.le-time input').value),
+      redSec: parseMSS(e.querySelector('.le-red input').value),
+    }));
+    group.remove(); checkEmpty(); saveLog();
+    showUndoToast('Deleted ' + entries.length + ' entr' + (entries.length === 1 ? 'y' : 'ies') + ' for ' + dateStr + '.', () => {
+      entries.forEach(e => addLogEntry(e.name, e.typeVal, e.timeSec, e.redSec, dateStr));
+    });
+  });
   bar.appendChild(delBtn);
   group.appendChild(bar);
 
@@ -802,6 +878,20 @@ function getOrCreateDateGroup(dateStr) {
 
 function checkEmpty() {
   logEmpty.style.display = logInner.querySelector('.log-entry') ? 'none' : '';
+}
+
+// ── Undo toast ──
+let undoTimeout = null, undoRestore = null;
+function showUndoToast(message, restoreFn) {
+  clearTimeout(undoTimeout);
+  undoRestore = restoreFn;
+  $('undoText').textContent = message;
+  $('undoToast').classList.add('visible');
+  undoTimeout = setTimeout(hideUndoToast, 6000);
+}
+function hideUndoToast() {
+  $('undoToast').classList.remove('visible');
+  undoRestore = null;
 }
 
 function addLogEntry(name, typeVal, timeSec, redSec, dateStr) {
@@ -853,10 +943,14 @@ function addLogEntry(name, typeVal, timeSec, redSec, dateStr) {
   const db = document.createElement('button'); db.className = 'le-del-btn';
   db.innerHTML = '✕'; db.title = 'Delete entry';
   db.addEventListener('click', () => {
+    const undoData = { name: ni.value, typeVal: ts.value, timeSec: parseMSS(mi.value), redSec: parseMSS(ri.value), dateStr };
     entry.remove();
     // Remove date group if empty
     if (!group.querySelector('.log-entry')) group.remove();
     checkEmpty(); saveLog();
+    showUndoToast('Speech entry deleted.', () => {
+      addLogEntry(undoData.name, undoData.typeVal, undoData.timeSec, undoData.redSec, undoData.dateStr);
+    });
   });
   dc.appendChild(db); entry.appendChild(dc);
 
@@ -1009,7 +1103,7 @@ $('scriptDemoBtn').addEventListener('click', () => {
   isDemo = true; running = true; paused = false;
   startBtn.textContent = 'Pause'; finishBtn.disabled = false; resetBtn.disabled = false;
   timerInterval = setInterval(tick, 1000);
-  $('scriptDemoBtn').disabled = true; $('scriptDemoBtn').textContent = '⏳ Running...';
+  $('scriptDemoBtn').disabled = true; $('scriptDemoBtn').textContent = 'Running...';
 });
 
 // ── Settings ──
@@ -1027,6 +1121,17 @@ function loadDarkMode() {
 }
 $('darkModeBtn').addEventListener('click', () => applyDarkMode(!document.body.classList.contains('dark-mode')));
 $('settingsDarkMode').addEventListener('change', () => applyDarkMode($('settingsDarkMode').checked));
+
+// ── Phase sound cues (default off) ──
+function applyPhaseSound(enabled) {
+  phaseSoundEnabled = enabled;
+  $('settingsPhaseSound').checked = enabled;
+  try { localStorage.setItem('speechTimerPhaseSound', enabled ? '1' : '0'); } catch(e) {}
+}
+function loadPhaseSound() {
+  try { applyPhaseSound(localStorage.getItem('speechTimerPhaseSound') === '1'); } catch(e) { applyPhaseSound(false); }
+}
+$('settingsPhaseSound').addEventListener('change', () => applyPhaseSound($('settingsPhaseSound').checked));
 
 // ── Speaker name autocomplete ──
 function refreshSpeakerDatalist() {
@@ -1080,6 +1185,7 @@ function exportLogCSV() {
 }
 $('exportCsvBtn').addEventListener('click', (e) => { e.stopPropagation(); exportLogCSV(); });
 $('printLogBtn').addEventListener('click', (e) => { e.stopPropagation(); window.print(); });
+$('undoBtn').addEventListener('click', () => { if (undoRestore) undoRestore(); hideUndoToast(); });
 
 $('settingsBtn').addEventListener('click', () => { $('settingsOverlay').classList.add('open'); });
 $('settingsClose').addEventListener('click', () => { $('settingsOverlay').classList.remove('open'); });
@@ -1259,8 +1365,19 @@ updateHints();
 activeIndicator = 'white';
 disableFlashToggle();
 loadDarkMode();
+loadPhaseSound();
 loadLog();
 refreshSpeakerDatalist();
+
+// Keep the second sticky block (timer digits) pinned right below the sticky
+// header, whatever height the header happens to render at.
+function syncStickyOffsets() {
+  const h = document.querySelector('.header');
+  if (h) document.documentElement.style.setProperty('--header-h', h.offsetHeight + 'px');
+}
+syncStickyOffsets();
+window.addEventListener('resize', syncStickyOffsets);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(syncStickyOffsets);
 
 // Register PWA service worker
 if ('serviceWorker' in navigator) {
