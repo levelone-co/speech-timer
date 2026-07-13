@@ -188,6 +188,20 @@
     background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.25); color: #fff;
   }
   .log-panel.hidden { display: none; }
+
+  /* Full screen log */
+  .log-wrapper.fullscreen {
+    position: fixed; inset: 0; z-index: 980; width: 100% !important; margin: 0 !important;
+    display: flex; flex-direction: column; background: var(--bg);
+  }
+  body.phase-green .log-wrapper.fullscreen { background: var(--green-bg); }
+  body.phase-yellow .log-wrapper.fullscreen { background: var(--yellow-bg); }
+  body.phase-red .log-wrapper.fullscreen { background: var(--red-bg); }
+  .log-wrapper.fullscreen .log-toggle-bar { border-radius: 0; flex-shrink: 0; }
+  .log-wrapper.fullscreen .log-panel {
+    flex: 1; height: auto !important; max-height: none !important; border-radius: 0; resize: none;
+  }
+  .log-wrapper.fullscreen .log-panel.hidden { display: block !important; }
   .log-panel-inner { padding: 10px 12px; }
 
   .log-header {
@@ -405,6 +419,7 @@
     transition: opacity 0.2s, background 0.2s;
   }
   .log-tool-btn:hover { opacity: 1; background: rgba(0,0,0,0.05); }
+  .log-tool-btn.icon-only { padding: 4px 8px; font-size: 0.8rem; text-transform: none; letter-spacing: 0; }
   body.phase-green .log-tool-btn, body.phase-yellow .log-tool-btn, body.phase-red .log-tool-btn {
     border-color: rgba(255,255,255,0.3);
   }
@@ -424,7 +439,7 @@
       display: block !important; text-align: center; font-weight: 900; font-size: 1.3rem;
       letter-spacing: -0.3px; text-transform: uppercase; margin-bottom: 14px; color: #000;
     }
-    .log-wrapper { width: 100% !important; margin: 0 !important; }
+    .log-wrapper { width: 100% !important; margin: 0 !important; position: static !important; }
     .log-panel { display: block !important; border: none !important; height: auto !important;
       max-height: none !important; overflow: visible !important; background: #fff !important;
       color: #000 !important; }
@@ -563,7 +578,8 @@
   <div class="log-toggle-bar" id="logToggle">
     <span>Speech Log</span>
     <span class="log-toggle-tools">
-      <button class="log-tool-btn" id="exportCsvBtn" title="Export log as CSV">Export CSV</button>
+      <button class="log-tool-btn icon-only" id="fullscreenBtn" title="Full screen">⛶</button>
+      <button class="log-tool-btn" id="exportCsvBtn" title="Export log as CSV">Export</button>
       <button class="log-tool-btn" id="printLogBtn" title="Print log">Print</button>
       <span class="arrow">▼</span>
     </span>
@@ -586,7 +602,7 @@
 <div class="footer">
   <a href="https://www.westlaketoastmasters.co.za" target="_blank" rel="noopener">www.westlaketoastmasters.co.za</a>
   <span style="opacity:0.3; margin:0 6px;">|</span>
-  <a href="https://github.com/levelone-co/speech-timer/" target="_blank" rel="noopener">v1.5.1</a><br>
+  <a href="https://github.com/levelone-co/speech-timer/" target="_blank" rel="noopener">v1.5.2</a><br>
   <script src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
   <script>kofiwidget2.init('Click here to buy me a coffee', '#2d3436', 'H2H71XAPZJ');kofiwidget2.draw();</script>
 </div>
@@ -671,7 +687,7 @@
 </div>
 
 <script>
-const APP_VERSION = '1.5.1';
+const APP_VERSION = '1.5.2';
 const presets = {
   standard:    { green: 300, yellow: 360, red: 420 },
   icebreaker:  { green: 240, yellow: 300, red: 360 },
@@ -699,6 +715,7 @@ const alarmToggle = $('alarmToggle'), flashToggle = $('flashToggle'), flashLabel
 const speakerName = $('speakerName');
 const hintGreen = $('hintGreen'), hintYellow = $('hintYellow'), hintRed = $('hintRed');
 const logToggle = $('logToggle'), logPanel = $('logPanel'), logInner = $('logInner'), logEmpty = $('logEmpty');
+const logWrapper = document.querySelector('.log-wrapper');
 const resetDialog = $('resetDialog');
 
 // ── Utility ──
@@ -1186,6 +1203,21 @@ function exportLogCSV() {
 }
 $('exportCsvBtn').addEventListener('click', (e) => { e.stopPropagation(); exportLogCSV(); });
 $('printLogBtn').addEventListener('click', (e) => { e.stopPropagation(); window.print(); });
+
+// ── Full screen log ──
+function setLogFullscreen(on) {
+  logWrapper.classList.toggle('fullscreen', on);
+  $('fullscreenBtn').textContent = on ? '⤡' : '⛶';
+  $('fullscreenBtn').title = on ? 'Exit full screen' : 'Full screen';
+  if (on) { logPanel.classList.remove('hidden'); logToggle.classList.remove('collapsed'); }
+}
+$('fullscreenBtn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  setLogFullscreen(!logWrapper.classList.contains('fullscreen'));
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && logWrapper.classList.contains('fullscreen')) setLogFullscreen(false);
+});
 $('undoBtn').addEventListener('click', () => { if (undoRestore) undoRestore(); hideUndoToast(); });
 
 $('settingsBtn').addEventListener('click', () => { $('settingsOverlay').classList.add('open'); });
