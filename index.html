@@ -453,16 +453,17 @@
     .log-entry {
       flex-wrap: wrap; padding: 8px 10px; gap: 2px;
     }
-    /* Line 1: name + status + delete */
-    .log-entry .le-name { flex: 1 1 auto; min-width: unset; }
-    .log-entry .le-name input { font-weight: 700; font-size: 0.85rem; }
-    .log-entry .le-status { width: auto; flex: 0 0 auto; order: -1; }
+    /* Line 1: status + name + delete (explicit order so wrapping is predictable) */
+    .log-entry .le-status { width: auto; flex: 0 0 auto; order: 1; }
     .log-entry .le-status .log-status { font-size: 0.58rem; padding: 2px 6px; }
-    .log-entry .le-del { width: auto; flex: 0 0 24px; order: -1; }
-    /* Line 2: type + time + red */
-    .log-entry .le-type { width: auto; flex: 1 1 55%; }
-    .log-entry .le-time { width: auto; flex: 0 0 48px; }
-    .log-entry .le-red { width: auto; flex: 0 0 48px; }
+    .log-entry .le-name { flex: 1 1 auto; min-width: unset; order: 2; }
+    .log-entry .le-name input { font-weight: 700; font-size: 0.85rem; }
+    .log-entry .le-del { width: auto; flex: 0 0 24px; order: 3; }
+    /* Line 2: type + time + red — all three get a label so their inputs line up */
+    .log-entry .le-type { width: auto; flex: 1 1 55%; order: 4; }
+    .log-entry .le-time { width: auto; flex: 0 0 48px; order: 5; }
+    .log-entry .le-red { width: auto; flex: 0 0 48px; order: 6; }
+    .log-entry .le-type::before { content: 'Type: '; font-size: 0.65rem; opacity: 0.5; }
     .log-entry .le-time::before { content: 'Time: '; font-size: 0.65rem; opacity: 0.5; }
     .log-entry .le-red::before { content: 'Red: '; font-size: 0.65rem; opacity: 0.5; }
   }
@@ -585,7 +586,7 @@
 <div class="footer">
   <a href="https://www.westlaketoastmasters.co.za" target="_blank" rel="noopener">www.westlaketoastmasters.co.za</a>
   <span style="opacity:0.3; margin:0 6px;">|</span>
-  <a href="https://github.com/levelone-co/speech-timer/" target="_blank" rel="noopener">v1.5.0</a><br>
+  <a href="https://github.com/levelone-co/speech-timer/" target="_blank" rel="noopener">v1.5.1</a><br>
   <script src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
   <script>kofiwidget2.init('Click here to buy me a coffee', '#2d3436', 'H2H71XAPZJ');kofiwidget2.draw();</script>
 </div>
@@ -670,7 +671,7 @@
 </div>
 
 <script>
-const APP_VERSION = '1.5.0';
+const APP_VERSION = '1.5.1';
 const presets = {
   standard:    { green: 300, yellow: 360, red: 420 },
   icebreaker:  { green: 240, yellow: 300, red: 360 },
