@@ -4,7 +4,7 @@
 
 A web-based speech timer for Toastmasters meetings. Works in any browser, installs as a standalone app on your phone, and runs offline.
 
-🌐 **Live app:** [https://levelone-co.github.io/speech-timer/](https://levelone-co.github.io/speech-timer/)
+🌐 **Live app:** [https://theonelevel-com.github.io/speech-timer/](https://theonelevel-com.github.io/speech-timer/)
 
 ---
 
